@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter_test/flutter_test.dart';
 import 'package:get/get_connect.dart';
 import 'package:mockito/mockito.dart';
@@ -22,7 +24,7 @@ void main() {
     () async {
       // arrange
       when(http.get(Constants.baseUrl, query: anyNamed('query'))).thenAnswer(
-        (_) async => Response(statusCode: 200, body: fixture('list_of_movies.json')),
+        (_) async => Response(statusCode: 200, body: json.decode(fixture('list_of_movies.json'))),
       );
       // act
       final response = await sut.getMoviesByTitle();
