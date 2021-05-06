@@ -21,12 +21,19 @@ class ConcreteMovieDataSource implements MovieDatasource {
     try {
       final response = await http.get(Constants.baseUrl, queryParameters: query);
       late List moviesJson;
-      if ((response.data as Map).containsKey('Search')) moviesJson = response.data['Search'];
-      moviesJson.forEach((movie) => movies.add(ShortMovieModel().fromJson(movie)));
-      return Right(movies);
+      if ((response.data as Map).containsKey('Search')) {
+        moviesJson = response.data['Search'];
+        moviesJson.forEach((movie) => movies.add(ShortMovieModel().fromJson(movie)));
+        return Right(movies);
+      } else {
+        throw DioError(
+          requestOptions: response.requestOptions,
+          response: response,
+        );
+      }
     } on DioError catch (e) {
       final errorMessage = e.response?.data['Error'] as String;
-      final searchedQuery = e.requestOptions.data['s'];
+      final searchedQuery = e.requestOptions.queryParameters['s'];
       if (errorMessage.contains('many')) return Left(SearchTooVagueFailure());
       if (errorMessage.contains('not found')) return Left(MovieNotFoundFailure(searchedQuery));
       return Left(ServerFailure());

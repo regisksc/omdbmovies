@@ -6,5 +6,5 @@ class MovieNotFoundFailure extends Failure {
 }
 
 class SearchTooVagueFailure extends Failure {
-  SearchTooVagueFailure();
+  SearchTooVagueFailure() : super(message: 'Especifique mais a sua busca');
 }
