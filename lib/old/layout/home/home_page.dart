@@ -2,14 +2,15 @@ import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import './home_controller.dart';
 
-class HomePage extends GetView<HomeController> {
+class HomePage extends StatelessWidget {
+  final controller = Get.find<HomeController>();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text('HomePage')),
       body: Center(
         child: FloatingActionButton(
-          onPressed: () {},
+          onPressed: () => Get.toNamed('search'),
           child: Text('proxima'),
         ),
       ),
