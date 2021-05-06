@@ -1,8 +1,9 @@
 import 'package:dartz/dartz.dart';
-import 'package:omdbmovies/features/movie/domain/entities/short_movie_entity.dart';
-import 'package:omdbmovies/features/movie/domain/repositories/movie_repository.dart';
-import 'package:omdbmovies/infrastructure/domain/error/failure.dart';
-import 'package:omdbmovies/infrastructure/domain/usecase/usecase.dart';
+
+import '../../../../infrastructure/domain/error/failure.dart';
+import '../../../../infrastructure/domain/usecase/usecase.dart';
+import '../entities/short_movie_entity.dart';
+import '../repositories/movie_repository.dart';
 
 class SearchMoviesUsecase extends Usecase<List<ShortMovieEntity>, String> {
   final MovieRepositoryContract repository;

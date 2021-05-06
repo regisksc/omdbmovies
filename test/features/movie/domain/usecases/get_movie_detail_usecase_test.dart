@@ -2,8 +2,9 @@ import 'package:dartz/dartz.dart';
 import 'package:faker/faker.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
-import 'package:omdbmovies/features/movie/domain/entities/short_movie_entity.dart';
+import 'package:omdbmovies/features/movie/domain/entities/detailed_movie_entity.dart';
 import 'package:omdbmovies/features/movie/domain/repositories/movie_repository.dart';
+import 'package:omdbmovies/features/movie/domain/usecases/get_movie_detail_usecase.dart';
 import 'package:omdbmovies/features/movie/domain/usecases/search_movies_usecase.dart';
 import 'package:omdbmovies/infrastructure/domain/error/failure.dart';
 
@@ -11,27 +12,31 @@ class MovieRepositoryMock extends Mock implements MovieRepositoryContract {}
 
 class FailureMock extends Mock implements Failure {}
 
+class MovieDetailMock extends Mock implements DetailedMovieEntity {}
+
 void main() {
   late MovieRepositoryMock repository;
-  late SearchMoviesUsecase sut;
+  late GetMovieDetailUsecase sut;
   late FailureMock failure;
-  final search = faker.lorem.word();
+  late MovieDetailMock entity;
+  final imdb = faker.guid.guid();
 
   setUp(() {
     repository = MovieRepositoryMock();
-    sut = SearchMoviesUsecase(repository);
+    sut = GetMovieDetailUsecase(repository);
     failure = FailureMock();
+    entity = MovieDetailMock();
   });
 
   test(
     'should return a list of ShortMovieEntity in Right',
     () async {
       // arrange
-      when(() => repository.searchMovies(search: search)).thenAnswer((_) async => Right(<ShortMovieEntity>[]));
+      when(() => repository.getMovieDetail(imdbID: imdb)).thenAnswer((_) async => Right(entity));
       // act
-      final result = await sut(search);
+      final result = await sut(imdb);
       // assert
-      expect(result, isA<Right<Failure, List<ShortMovieEntity>>>());
+      expect(result, isA<Right<Failure, DetailedMovieEntity>>());
     },
   );
 
@@ -39,9 +44,9 @@ void main() {
     'should return a Failure if repository returns so',
     () async {
       // arrange
-      when(() => repository.searchMovies(search: search)).thenAnswer((_) async => Left(failure));
+      when(() => repository.getMovieDetail(imdbID: imdb)).thenAnswer((_) async => Left(failure));
       // act
-      final result = await sut(search);
+      final result = await sut(imdb);
       final resultExtract = result.fold((failure) => failure, (success) => success);
       // assert
       expect(result, isA<Left>());

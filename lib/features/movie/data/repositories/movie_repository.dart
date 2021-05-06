@@ -10,9 +10,16 @@ class MovieRepository implements MovieRepositoryContract {
   final MovieDatasource datasource;
   MovieRepository({required this.datasource});
   @override
-  Future<Either<Failure, DetailedMovieEntity>> getMovieDetail({required String imdbID}) {
-    // TODO: implement getMovieDetail
-    throw UnimplementedError();
+  Future<Either<Failure, DetailedMovieEntity>> getMovieDetail({required String imdbID}) async {
+    late DetailedMovieEntity movie;
+    final fetch = await datasource.getMovieDetail(imdbID);
+    return fetch.fold(
+      (failure) => Left(failure),
+      (success) {
+        print(success);
+        return Right(success.toEntity);
+      },
+    );
   }
 
   @override
