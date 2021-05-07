@@ -1,4 +1,4 @@
-import 'package:dio/dio.dart' as dio;
+import 'package:dio/dio.dart';
 import 'package:get/get.dart';
 
 import '../../features/movie/data/datasources/movie_datasource.dart';
@@ -11,7 +11,7 @@ class MovieDetailBindings implements Bindings {
   @override
   void dependencies() {
     Get.put(MovieDetailController());
-    Get.lazyPut<MovieDatasource>(() => ConcreteMovieDataSource(http: Get.put(dio.Dio())));
+    Get.lazyPut<MovieDatasource>(() => ConcreteMovieDataSource(http: Get.put(Dio())));
     Get.lazyPut<MovieRepositoryContract>(() => MovieRepository(datasource: Get.find()));
     Get.lazyPut(() => GetMovieDetailUsecase(Get.find()));
   }

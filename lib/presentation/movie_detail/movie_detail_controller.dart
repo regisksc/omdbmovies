@@ -3,26 +3,25 @@ import 'package:omdbmovies/features/movie/domain/entities/detailed_movie_entity.
 import 'package:omdbmovies/features/movie/domain/usecases/get_movie_detail_usecase.dart';
 
 class MovieDetailController extends GetxController {
-  late String imdbID;
+  late String? imdbID;
   final screenText = ''.obs;
   final isLoading = false.obs;
   late DetailedMovieEntity movie;
 
   @override
-  void onInit() {
-    getMovieDetails();
-    super.onInit();
+  void onReady() async {
+    super.onReady();
+    await getMovieDetails();
   }
 
-  void getMovieDetails() async {
-    if (Get.parameters['imdbID'] != null) imdbID = Get.parameters['imdbID']!;
-    print('asd');
-    if (imdbID == '') {
+  Future getMovieDetails() async {
+    imdbID = Get.parameters['imdbID']!;
+    if (imdbID == null) {
       Get.snackbar('Erro', 'ID nulo');
     } else {
-      final usecase = Get.find<GetMovieDetailUsecase>();
+      final usecase = Get.put<GetMovieDetailUsecase>(Get.find());
       isLoading.value = true;
-      final fetchedMovie = await usecase(imdbID);
+      final fetchedMovie = await usecase(imdbID!);
       fetchedMovie.fold(
         (failure) => screenText.value = failure.message ?? '',
         (resultMovie) => movie = resultMovie,

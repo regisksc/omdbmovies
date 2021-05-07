@@ -9,28 +9,30 @@ class MovieDetailPage extends GetView<MovieDetailController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('MovieDetailPage'),
-      ),
+      appBar: AppBar(title: Text('MovieDetailPage')),
       body: Obx(() {
         if (controller.isLoading.value) return CupertinoActivityIndicator();
         if (controller.screenText.value != '') return Center(child: Text(controller.screenText.value));
+        final movie = controller.movie;
         return Column(
           children: [
-            Expanded(child: Image.network(controller.movie.poster)),
+            Expanded(child: Image.network(movie.poster)),
             Expanded(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  Text(controller.movie.title),
-                  Text(controller.movie.released),
-                  Text(controller.movie.director),
-                  Text(controller.movie.genre),
-                  Text(controller.movie.plot),
+                  Text(movie.title),
+                  Text(movie.released),
+                  Text(movie.director),
+                  Text(movie.genre),
+                  Text(movie.plot),
                   GestureDetector(
-                    onTap: () => launch(controller.movie.website),
-                    child: Text(controller.movie.website, style: TextStyle(color: Colors.lightBlueAccent)),
+                    onTap: () => launch(movie.website),
+                    child: Text(
+                      movie.website,
+                      style: TextStyle(color: Colors.lightBlueAccent),
+                    ),
                   ),
                 ],
               ),

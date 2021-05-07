@@ -1,8 +1,8 @@
-import 'dart:convert';
+import 'package:freezed_annotation/freezed_annotation.dart';
 
-import 'package:omdbmovies/features/movie/domain/entities/detailed_movie_entity.dart';
-import 'package:omdbmovies/features/movie/domain/entities/short_movie_entity.dart';
-import 'package:omdbmovies/infrastructure/data/model/model.dart';
+import '../../../../infrastructure/data/model/model.dart';
+import '../../domain/entities/detailed_movie_entity.dart';
+import 'rating_model.dart';
 
 class DetailedMovieModel extends Model {
   final String? title;
@@ -13,11 +13,12 @@ class DetailedMovieModel extends Model {
   final String? plot;
   final String? country;
   final String? poster;
-  // final List<RatingModel>? ratings;
+  final List<RatingModel>? ratings;
   final String? website;
 
   DetailedMovieModel({
     this.title,
+    this.ratings,
     this.year,
     this.released,
     this.genre,
@@ -38,9 +39,9 @@ class DetailedMovieModel extends Model {
         plot: json['Plot'],
         country: json['Country'],
         poster: json['Poster'],
-        // ratings: json['Ratings'] != null
-        //     ? <RatingModel>[...(json['Ratings'] as List).map((v) => RatingModel.fromJson(v)).toList()]
-        //     : <RatingModel>[],
+        ratings: json['Ratings'] != null
+            ? <RatingModel>[...(json['Ratings'] as List).map((v) => RatingModel().fromJson(v)).toList()]
+            : <RatingModel>[],
         website: json['Website'],
       );
 
