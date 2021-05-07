@@ -40,22 +40,25 @@ class SearchPage extends StatelessWidget {
                   separatorBuilder: (context, index) => SizedBox(height: 40),
                   itemBuilder: (context, index) {
                     final movie = controller.listOfMovies.elementAt(index);
-                    return Container(
-                      margin: EdgeInsets.symmetric(horizontal: 30),
-                      child: Row(
-                        children: [
-                          Expanded(flex: 4, child: Image.network(movie.poster)),
-                          Expanded(
-                            flex: 6,
-                            child: Column(
-                              children: [
-                                Text(movie.title),
-                                Text(movie.type),
-                                Text(movie.year),
-                              ],
+                    return InkWell(
+                      onTap: () => Get.toNamed('movie/${movie.imdbID}'),
+                      child: Container(
+                        margin: EdgeInsets.symmetric(horizontal: 30),
+                        child: Row(
+                          children: [
+                            Expanded(flex: 4, child: Image.network(movie.poster)),
+                            Expanded(
+                              flex: 6,
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                children: [
+                                  Text(movie.title),
+                                  Text(movie.year),
+                                ],
+                              ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                     );
                   },
