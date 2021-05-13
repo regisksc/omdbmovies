@@ -11,7 +11,7 @@ abstract class MovieDatasource {
   final Dio http;
   MovieDatasource(this.http);
   Future<Either<Failure, List<ShortMovieModel>>> fetchMovies({required String searchQuery, int? page});
-  Future<Either<Failure, DetailedMovieModel>> getMovieDetail(String imdb);
+  Future<DetailedMovieModel> getMovieDetail(String imdb);
 }
 
 class ConcreteMovieDataSource implements MovieDatasource {
@@ -41,7 +41,7 @@ class ConcreteMovieDataSource implements MovieDatasource {
   }
 
   @override
-  Future<Either<Failure, DetailedMovieModel>> getMovieDetail(String imdb) async {
+  Future<DetailedMovieModel> getMovieDetail(String imdb) async {
     final query = {'i': imdb, 'type': 'movie'};
     try {
       final response = await http.get(Constants.baseUrl, queryParameters: query);
@@ -54,12 +54,12 @@ class ConcreteMovieDataSource implements MovieDatasource {
         throw error;
       }
       movie = DetailedMovieModel().fromJson(response.data);
-      return Right(movie);
+      return movie;
     } on DioError catch (e) {
       final errorMessage = e.response?.data['Error'] as String;
       final searchedQuery = 'o id ${e.requestOptions.queryParameters['i']}';
-      if (errorMessage.isNotEmpty) return Left(MovieNotFoundFailure(searchedQuery));
-      return Left(ServerFailure());
+      if (errorMessage.isNotEmpty) throw MovieNotFoundFailure(searchedQuery);
+      throw ServerFailure();
     }
   }
 }

@@ -32,25 +32,23 @@ void main() {
     'should return a list of ShortMovieEntity in Right',
     () async {
       // arrange
-      when(() => repository.getMovieDetail(imdbID: imdb)).thenAnswer((_) async => Right(entity));
+      when(() => repository.getMovieDetail(imdbID: imdb)).thenAnswer((_) async => entity);
       // act
       final result = await sut(imdb);
       // assert
-      expect(result, isA<Right<Failure, DetailedMovieEntity>>());
+      expect(result, isA<DetailedMovieEntity>());
     },
   );
 
   test(
-    'should return a Failure if repository returns so',
+    'should rethrow',
     () async {
       // arrange
-      when(() => repository.getMovieDetail(imdbID: imdb)).thenAnswer((_) async => Left(failure));
+      when(() => repository.getMovieDetail(imdbID: imdb)).thenThrow(failure);
       // act
-      final result = await sut(imdb);
-      final resultExtract = result.fold((failure) => failure, (success) => success);
+      final result = sut(imdb);
       // assert
-      expect(result, isA<Left>());
-      expect(resultExtract, isA<Failure>());
+      expect(result, throwsA(failure));
     },
   );
 }

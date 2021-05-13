@@ -11,28 +11,20 @@ class MovieRepository implements MovieRepositoryContract {
   final MovieDatasource datasource;
   MovieRepository({required this.datasource});
   @override
-  Future<Either<Failure, DetailedMovieEntity>> getMovieDetail({required String imdbID}) async {
-    final fetch = await datasource.getMovieDetail(imdbID);
-    return fetch.fold(
-      (failure) => Left(failure),
-      (success) {
-        print(success);
-        return Right(success.toEntity);
-      },
-    );
+  Future<DetailedMovieEntity> getMovieDetail({required String imdbID}) async {
+    try {
+      final fetch = await datasource.getMovieDetail(imdbID);
+      return fetch.toEntity;
+    } catch (e) {
+      rethrow;
+    }
   }
 
   @override
   Future<Either<Failure, List<ShortMovieEntity>>> searchMovies({required String search, int? page}) async {
-    final movies = <ShortMovieEntity>[];
     final fetch = await datasource.fetchMovies(searchQuery: search, page: page);
-    return fetch.fold(
-      (failure) => Left(failure),
-      (success) {
-        final movieModels = <ShortMovieModel>[]..addAll(success);
-        movieModels.forEach((movieModel) => movies.add(movieModel.toEntity));
-        return Right(movies);
-      },
+    return fetch.map(
+      (success) => success.map((movieModel) => movieModel.toEntity).toList(),
     );
   }
 }

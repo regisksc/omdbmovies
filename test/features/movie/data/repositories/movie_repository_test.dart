@@ -50,12 +50,12 @@ void main() {
       () async {
         // arrange
         final imdb = faker.guid.guid();
-        when(() => datasource.getMovieDetail(any())).thenAnswer((_) async => Right(movie));
+        when(() => datasource.getMovieDetail(any())).thenAnswer((_) async => movie);
         // act
         final result = await sut.getMovieDetail(imdbID: imdb);
         // assert
         verify(() => datasource.getMovieDetail(any()));
-        expect(result, isA<Right<Failure, DetailedMovieEntity>>());
+        expect(result, isA<DetailedMovieEntity>());
       },
     );
   });

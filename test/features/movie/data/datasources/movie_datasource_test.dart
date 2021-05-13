@@ -62,9 +62,8 @@ void main() {
         ).thenAnswer((_) async => suggestedResponse);
         // act
         final result = await sut.getMovieDetail(faker.guid.guid());
-        final resultExtract = result.fold((l) => l, (r) => r);
         // assert
-        expect(resultExtract, isA<DetailedMovieModel>());
+        expect(result, isA<DetailedMovieModel>());
       },
     );
   });

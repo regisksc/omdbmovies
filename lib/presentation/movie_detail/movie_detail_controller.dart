@@ -1,6 +1,7 @@
 import 'package:get/get.dart';
 import 'package:omdbmovies/features/movie/domain/entities/detailed_movie_entity.dart';
 import 'package:omdbmovies/features/movie/domain/usecases/get_movie_detail_usecase.dart';
+import 'package:omdbmovies/infrastructure/domain/error/failure.dart';
 
 class MovieDetailController extends GetxController {
   late String? imdbID;
@@ -19,14 +20,15 @@ class MovieDetailController extends GetxController {
     if (imdbID == null) {
       Get.snackbar('Erro', 'ID nulo');
     } else {
-      final usecase = Get.put<GetMovieDetailUsecase>(Get.find());
-      isLoading.value = true;
-      final fetchedMovie = await usecase(imdbID!);
-      fetchedMovie.fold(
-        (failure) => screenText.value = failure.message ?? '',
-        (resultMovie) => movie = resultMovie,
-      );
-      isLoading.value = false;
+      try {
+        final usecase = Get.put<GetMovieDetailUsecase>(Get.find());
+        isLoading.value = true;
+        movie = await usecase(imdbID!);
+        isLoading.value = false;
+      } on Failure catch (failure) {
+        screenText.value = failure.message ?? '';
+        isLoading.value = false;
+      }
     }
   }
 }
