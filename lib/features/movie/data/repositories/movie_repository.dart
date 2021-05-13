@@ -12,12 +12,8 @@ class MovieRepository implements MovieRepositoryContract {
   MovieRepository({required this.datasource});
   @override
   Future<DetailedMovieEntity> getMovieDetail({required String imdbID}) async {
-    try {
-      final fetch = await datasource.getMovieDetail(imdbID);
-      return fetch.toEntity;
-    } catch (e) {
-      rethrow;
-    }
+    final fetch = await datasource.getMovieDetail(imdbID);
+    return fetch.toEntity;
   }
 
   @override
