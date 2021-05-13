@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
+import 'package:omdbmovies/infrastructure/adapters/adapters.dart';
 import './search_controller.dart';
 
 class SearchPage extends StatelessWidget {
@@ -31,37 +32,41 @@ class SearchPage extends StatelessWidget {
           ),
           Expanded(
             flex: 85,
-            child: Obx(
+            child: StateWatchAdapter(
               () {
                 if (controller.isLoading.value == true) return CupertinoActivityIndicator();
                 if (controller.listOfMovies.isEmpty) return Text(controller.screenText.value);
-                return ListView.separated(
-                  itemCount: controller.listOfMovies.length,
-                  separatorBuilder: (context, index) => SizedBox(height: 40),
-                  itemBuilder: (context, index) {
-                    final movie = controller.listOfMovies.elementAt(index);
-                    return InkWell(
-                      onTap: () => Get.toNamed('movie/${movie.imdbID}'),
-                      child: Container(
-                        margin: EdgeInsets.symmetric(horizontal: 30),
-                        child: Row(
-                          children: [
-                            Expanded(flex: 4, child: Image.network(movie.poster)),
-                            Expanded(
-                              flex: 6,
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                children: [
-                                  Text(movie.title),
-                                  Text(movie.year),
-                                ],
+                return Scrollbar(
+                  radius: Radius.zero,
+                  showTrackOnHover: true,
+                  child: ListView.separated(
+                    itemCount: controller.listOfMovies.length,
+                    separatorBuilder: (context, index) => SizedBox(height: 40),
+                    itemBuilder: (context, index) {
+                      final movie = controller.listOfMovies.elementAt(index);
+                      return InkWell(
+                        onTap: () => RoutingAdapter.navTo(route: 'movie/${movie.imdbID}'),
+                        child: Container(
+                          margin: EdgeInsets.symmetric(horizontal: 30),
+                          child: Row(
+                            children: [
+                              Expanded(flex: 4, child: Image.network(movie.poster)),
+                              Expanded(
+                                flex: 6,
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                  children: [
+                                    Text(movie.title),
+                                    Text(movie.year),
+                                  ],
+                                ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
-                      ),
-                    );
-                  },
+                      );
+                    },
+                  ),
                 );
               },
             ),

@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
+import 'package:omdbmovies/infrastructure/adapters/adapters.dart';
 import './home_controller.dart';
 
 class HomePage extends StatelessWidget {
@@ -10,7 +11,7 @@ class HomePage extends StatelessWidget {
       appBar: AppBar(title: Text('HomePage')),
       body: Center(
         child: FloatingActionButton(
-          onPressed: () => Get.toNamed('search'),
+          onPressed: () => RoutingAdapter.navTo(route: 'search'),
           child: Text('proxima'),
         ),
       ),
